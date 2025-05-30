@@ -1,0 +1,22 @@
+﻿@page
+@model CartModel
+@using StoreCore
+@using Newtonsoft.Json.Linq
+@{
+    var jsonString = "{ 'product': 'Koala', 'price': '29.00', 'weight': '2.00', 'description': 'Kolala product' }";
+    var jsonObject = JObject.Parse(jsonString);
+    var price = Convert.ToDecimal((double)jsonObject["price"]);
+    var weight = Convert.ToDecimal((double)jsonObject["weight"]);
+    var product = (string)jsonObject["product"];
+
+    var calculator = new ShippingCalculator();
+    var shippingCost = calculator.CalculateShippingCost(10);
+}
+@{
+    ViewData["Title"] = "WEBStore Shopping Cart";
+}
+<h1>@ViewData["Title"]</h1>
+
+<p>Here's your shopping cart: @product</p>
+<p>Price: $@price</p>
+<p>Here's your shipping cost: $@shippingCost</p>

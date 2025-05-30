@@ -1,0 +1,75 @@
+{
+  "format": 1,
+  "restore": {
+    "/Users/saisona/Desktop/webstore/ausemartweb.csproj": {}
+  },
+  "projects": {
+    "/Users/saisona/Desktop/webstore/ausemartweb.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "/Users/saisona/Desktop/webstore/ausemartweb.csproj",
+        "projectName": "ausemartweb",
+        "projectPath": "/Users/saisona/Desktop/webstore/ausemartweb.csproj",
+        "packagesPath": "/Users/saisona/.nuget/packages/",
+        "outputPath": "/Users/saisona/Desktop/webstore/obj/",
+        "projectStyle": "PackageReference",
+        "configFilePaths": [
+          "/Users/saisona/Desktop/webstore/NuGet.Config",
+          "/Users/saisona/.nuget/NuGet/NuGet.Config"
+        ],
+        "originalTargetFrameworks": [
+          "net6.0"
+        ],
+        "sources": {
+          "https://pkgs.dev.azure.com/sairamsunkaranam/_packaging/StoreCore/nuget/v3/index.json": {}
+        },
+        "frameworks": {
+          "net6.0": {
+            "targetAlias": "net6.0",
+            "projectReferences": {}
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        }
+      },
+      "frameworks": {
+        "net6.0": {
+          "targetAlias": "net6.0",
+          "dependencies": {
+            "Newtonsoft.Json": {
+              "target": "Package",
+              "version": "[13.0.3, )"
+            },
+            "StoreCore": {
+              "target": "Package",
+              "version": "[1.0.0, )"
+            }
+          },
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48",
+            "net481"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "frameworkReferences": {
+            "Microsoft.AspNetCore.App": {
+              "privateAssets": "none"
+            },
+            "Microsoft.NETCore.App": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "/usr/local/share/dotnet/sdk/6.0.428/RuntimeIdentifierGraph.json"
+        }
+      }
+    }
+  }
+}
