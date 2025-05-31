@@ -14,13 +14,18 @@ pool:
 variables:
   buildConfig: 'Release'
   subscription: 'Azure Cloud1'
-  appName: 'web1-webstore-app'
+  appNameDev: 'web1-webstore-app-dev'
+  appNameProd: 'web1-webstore-app'
+  testUrl: "https://web1-webstore-app-dev-dse3e2ggcad4ebbh.centralus-01.azurewebsites.net/Cart"
 
 resources:
   repositories:
     - repository: 'StoreCoreTests'
       type: git
       name: my-project/StoreCoreTests
+    - repository: 'webUITests'
+      type: git
+      name: my-project/webUITests
 
 stages:
 - stage: BuildStage
@@ -86,6 +91,57 @@ stages:
         artifact: 'webstore-dll'
         publishLocation: 'pipeline'
 
+- stage: DevStage
+  displayName: 'Dev Stage'
+  condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/main'))
+  pool:
+    vmImage: windows-latest
+
+  jobs:
+  - deployment: DevDeploy
+    displayName: 'Deploy Dev'
+    environment: 'DEV'
+    strategy:
+      runOnce:
+        deploy:
+    
+          steps:
+          - task: AzureWebApp@1
+            inputs:
+              azureSubscription: '$(subscription)'
+              appType: 'webAppLinux'
+              appName: '$(appNameDev)'
+              package: '$(Pipeline.Workspace)/**/*.zip'
+              runtimeStack: 'DOTNETCORE|6.0'
+          
+          - checkout: webUITests
+          - task: UseDotNet@2
+            displayName: 'Use .NET 6'
+            inputs:
+              version: '6.x'
+
+          - task: DotNetCoreCLI@2
+            displayName: '.NET restore'
+            inputs:
+              command: 'restore'
+              projects: '**/*.csproj'
+          
+          - task: DotNetCoreCLI@2
+            env:
+              testUrl: '$(testUrl)'
+            inputs:
+              command: 'test'
+              projects: '**/*.csproj'
+              arguments: '--configuration $(buildConfig) --logger trx --results-directory $(Agent.TempDirectory)'
+              publishTestResults: false
+          
+          - task: PublishTestResults@2
+            inputs:
+              testResultsFormat: 'VSTest'
+              testResultsFiles: '**/*.trx'
+              searchFolder: '$(Agent.TempDirectory)'
+
+
 - stage: ProdStage
   displayName: 'Prod Stage'
   condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/main'))
@@ -103,7 +159,7 @@ stages:
             inputs:
               azureSubscription: '$(subscription)'
               appType: 'webAppLinux'
-              appName: '$(appName)'
+              appName: '$(appNameProd)'
               package: '$(Pipeline.Workspace)/**/*.zip'
               runtimeStack: 'DOTNETCORE|6.0'
 
